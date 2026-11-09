@@ -51,13 +51,13 @@ FROM gold.fact_sales;
 
 --- Checking the Duplicated rows for all tables ----
 
-SELECT customer_id, COUNT(customer_id)
+SELECT customer_id, COUNT(customer_id) AS duplicate_count
 FROM gold.dim_customers
 GROUP BY customer_id
 HAVING COUNT(customer_id) > 1
 ;
 
-SELECT product_id, COUNT(product_id)
+SELECT product_id, COUNT(product_id) AS duplicate_count
 FROM gold.dim_products
 GROUP BY product_id
 HAVING COUNT(product_id) > 1;
@@ -85,6 +85,7 @@ GROUP BY order_number,
 HAVING COUNT(*) > 1
 ;
 
+
 ---- Analyze Sales Performance Over Time ------
 
 SELECT 
@@ -99,7 +100,7 @@ GROUP BY order_year, order_month
 ORDER BY order_year, order_month ASC;
 
 SELECT 
-	DATE_TRUNC('year', order_date) AS order_date,
+	DATE_TRUNC('year', order_date) AS order_year,
 	SUM(sales_amount) AS total_sales,
 	COUNT(DISTINCT customer_key) AS total_customers,
 	SUM(quantity) AS total_quantity
@@ -107,6 +108,16 @@ FROM gold.fact_sales
 WHERE order_date IS NOT NULL
 GROUP BY DATE_TRUNC('year', order_date)
 ORDER BY DATE_TRUNC('year', order_date);
+
+SELECT 
+	DATE_TRUNC('month', order_date) AS order_month,
+	SUM(sales_amount) AS total_sales,
+	COUNT(DISTINCT customer_key) AS total_customers,
+	SUM(quantity) AS total_quantity
+FROM gold.fact_sales
+WHERE order_date IS NOT NULL
+GROUP BY DATE_TRUNC('month', order_date)
+ORDER BY DATE_TRUNC('month', order_date);
 
 SELECT 
 	TO_CHAR(order_date, 'YYYY-Mon') AS order_date,
@@ -139,6 +150,16 @@ WHERE order_date IS NOT NULL
 GROUP BY DATE_TRUNC('year', order_date)
 ORDER BY DATE_TRUNC('year', order_date))
 ;
+
+SELECT 
+	TO_CHAR(order_date, 'YYYY-Mon') AS order_date,
+	SUM(sales_amount) AS total_sales,
+	COUNT(DISTINCT customer_key) AS total_customers,
+	SUM(quantity) AS total_quantity
+FROM gold.fact_sales
+WHERE order_date IS NOT NULL
+	GROUP BY TO_CHAR(order_date, 'YYYY-Mon')
+	ORDER BY TO_CHAR(order_date, 'YYYY-Mon');
 
 -- Performance Analysis ---
 -- Comparing the current value to a target value. 
@@ -224,7 +245,7 @@ FROM country_sales
 ORDER BY total_quantity DESC
 ;
 
--- 42:21 stopped
+
 -- Data Segmentation ---
 -- [Measure] By [Measure] --
 

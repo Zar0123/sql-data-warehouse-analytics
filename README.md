@@ -96,7 +96,7 @@ This section analyzes sales performance by time period.
 
 ### 2.1 Yearly & Monthly Sales Performance
 
-this query calculates total sales, unique customers, total quantity sold, and total orders for each year.
+This query calculates total sales, unique customers, total quantity sold, and total orders for each year.
 
 ```sql
 SELECT 
@@ -183,9 +183,7 @@ WHERE order_date IS NOT NULL
 	GROUP BY TO_CHAR(order_date, 'YYYY-Mon')
 	ORDER BY TO_CHAR(order_date, 'YYYY-Mon');
 ```
-## 4. Analyze the yearly performance of products
-by comparing each product's sales to both its average sales performance and
-the previous year's sales.
+## 4. Analyze the yearly performance of products by comparing each product's sales to both its average sales performance and the previous year's sales.
 
 ```sql
 WITH yearly_product_sales AS(
@@ -241,8 +239,7 @@ ORDER BY total_sales DESC
 
 ```
 
-## 6. Which country generate the higest product sales valume, 
-and what is each country's percentage share of total quantity sold?
+## 6. Which country generate the higest product sales valume, and what is each country's percentage share of total quantity sold?
 
 ```sql
 WITH country_sales AS(
@@ -264,8 +261,7 @@ ORDER BY total_quantity DESC
 ;
 ```
 
-## 7. Segment products into cost ranges and
-count how many products fall into each segment
+## 7. Segment products into cost ranges and count how many products fall into each segment
 
 ```sql
 WITH product_segments AS
